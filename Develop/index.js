@@ -6,11 +6,12 @@ const inquirer = require('inquirer');
 //this is the destination of where the files will be written to
 const { writeFile } = require('./utils/generateMarkdown');
 
+
 const welcomeMessage = () => {
     console.log(`
-============================
-Create a professional README
-============================
+=======================================
+Welcome to Create a professional README
+=======================================
 `);
 };
 //invoking the welcome message
@@ -21,13 +22,52 @@ const promptUser = () => {
     return inquirer.prompt([
         {
             type: 'input',
-            name: 'projectTitle',
-            message: 'What is the name of your project? (Required)',
-            validate: projectTitleInput => {
-                if (projectTitleInput) {
+            name: 'githubname',
+            message: 'What is your GitHub username? (Required)',
+            validate: githubnameInput => {
+                if (githubnameInput) {
                     return true;
                 } else {
-                    console.log('Please enter your project title!!');
+                    console.log('Please enter your GitHub username!!');
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'useremail',
+            message: 'What is a good email for you? (Required)',
+            validate: userEmailInput => {
+                if (userEmailInput) {
+                    return true;
+                } else {
+                    console.log('Please enter your GitHub username!!');
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'repotitle',
+            message: 'What is the name of your repo? (Required)',
+            validate: repoTitleInput => {
+                if (repoTitleInput) {
+                    return true;
+                } else {
+                    console.log('Please enter your repo title!!');
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'desc',
+            message: 'Enter project description? (Required)',
+            validate: descInput => {
+                if (descInput) {
+                    return true;
+                } else {
+                    console.log('Please enter project description!!');
                     return false;
                 }
             }
@@ -88,12 +128,17 @@ const promptUser = () => {
             type: 'checkbox',
             name: 'typeOfLic',
             message: 'Choose a type of license? (Check all that apply)',
-            choices: ['Public Domain', 'Permissive', 'LGPL', 'Copyleft', 'Proprietary']
-        }
+            choices: ['GPL', 'MIT', 'LGPL', 'Apache License 2.0', 'BSD']
+        },
 
-    ]);
-
+        //write
+    ]).then(function (answers) {
+        const queryUrl = `https://api.github.com/users/${answers.githubname}/repos?per_page=50`;
+        const shieldUrl = `https://img.shields.io/github/issues/${answers.githubname}/${answers.repotitle}`;
+    })
 };
+
+
 
 
 
